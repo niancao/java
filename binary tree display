@@ -1,0 +1,81 @@
+import java.util.*;
+
+class Treenode {
+	int data;
+	Treenode left, right;
+
+	Treenode(int data) {
+		this.data = data;
+		left = right = null;
+	}
+}
+
+class Tree {
+	Treenode root;
+
+	Tree() {
+		root = null;
+	}
+}
+
+public class Main {
+
+	public static int height(Treenode root) {
+		if (root == null)
+			return 0;
+		return Math.max(height(root.left), height(root.right)) + 1;
+	}
+
+	public static int getcol(int h) {
+		if (h == 1)
+			return 1;
+		return getcol(h - 1) + getcol(h - 1) + 1;
+	}
+
+	public static void printTree(int[][] M, Treenode root, int col, int row, int height) {
+		if (root == null)
+			return;
+		M[row][col] = root.data;
+		printTree(M, root.left, col - (int)Math.pow(2, height - 2), row + 1, height - 1);
+		printTree(M, root.right, col + (int)Math.pow(2, height - 2), row + 1, height - 1);
+	}
+
+	public static void TreePrinter(Tree tree) {
+		int h = height(tree.root);
+		int col = getcol(h);
+		int[][] M = new int[h][col];
+		printTree(M, tree.root, col / 2, 0, h);
+		for (int i = 0; i < h; i++) {
+			for (int j = 0; j < col; j++) {
+				if (M[i][j] == 0)
+					System.out.print(" ");
+				else
+					System.out.print(M[i][j] + " ");
+			}
+			System.out.println();
+		}
+	}
+
+	public static void main(String[] args) {
+		Tree myTree = new Tree();
+		myTree.root = new Treenode(30);
+		myTree.root.left = new Treenode(21);
+		myTree.root.right = new Treenode(49);
+		myTree.root.left.left = new Treenode(19);
+		myTree.root.left.right = new Treenode(25);
+		myTree.root.right.left = new Treenode(38);
+		myTree.root.right.right = new Treenode(60);
+		myTree.root.left.left.left = new Treenode(16);
+		myTree.root.left.left.right = new Treenode(20);
+		myTree.root.left.right.left = new Treenode(22);
+		myTree.root.left.right.right = new Treenode(28);
+		myTree.root.left.right.right.left = new Treenode(27);
+		myTree.root.right.left.left = new Treenode(35);
+		myTree.root.right.left.right = new Treenode(42);
+		myTree.root.right.right.left = new Treenode(52);
+		myTree.root.right.right.right = new Treenode(69);
+		myTree.root.right.right.left.left = new Treenode(50);
+		myTree.root.right.right.left.left.right = new Treenode(51);
+		TreePrinter(myTree);
+	}
+}

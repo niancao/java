@@ -1,0 +1,77 @@
+1.构造函数
+class A{
+    private int i;
+    private int j;
+    
+    public void set(int a, int b)// private 无法直接使用，设置一个set函数。
+    {
+        i = a;
+        j = b;
+    }
+      
+    void show()
+    {
+        System.out.printf("i = %d,\nj = %d", i, j);
+    }
+}
+
+class TestCount{
+    public static void main(String[] args){
+        A aa = new A();
+        //aa.i = 1;
+        //aa.j = 2;
+        aa.set(1, 2);
+        aa.show();
+    }
+}
+
+class A{
+    private int i;
+    private int j;
+    
+    public A(int a, int b) // 构造函数
+    {
+        i = a;
+        j = b;
+    }
+
+    
+    void show()
+    {
+        System.out.printf("i = %d,\nj = %d", i, j);
+    }
+}
+
+class TestCount{
+    public static void main(String[] args){
+        A aa = new A(1, 2);
+        //aa.i = 1;
+        //aa.j = 2;
+        
+        aa.show();
+    }
+}
+
+//内存分配的问题
+class B{
+    public int i = 10;
+    public void show()
+    {
+        System.out.printf("%d\n", i);
+    }
+}
+
+class M{
+    public static void main(String[] args){
+        B bb1 = new B();
+        B bb2 = new B();
+        bb1.i = 20;
+        bb2.i = 5;
+        bb1.show();
+        bb2.show();
+        bb1 = bb2;
+        bb1.show();
+        bb2.show();
+    }
+}
+

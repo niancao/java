@@ -1,0 +1,30 @@
+//只创建1个对象
+//static 的作用：
+
+class A{
+    public int i = 20;
+    private static A aa = new A();//不能New一个对象，必须有static, 否则无法使用。
+    
+    private A(){ //私有的对象，不允许再new出一个对象，
+        
+    }
+    public static A getA(){ //static一定不能省略
+        return aa;
+    }
+    
+}
+public class Main{
+    public static void main(String[] args){
+        
+        A aa1 = A.getA();
+        A aa2 = A.getA();
+        
+        aa1.i = 99;
+        System.out.printf("%d\n", aa2.i); // result = 99
+         if (aa1 == aa2)
+          System.out.printf("aa1 = aa2\n");
+        else
+          System.out.printf("aa1 不等于 aa2\n");   //只构造了一个函数，所以是相等的。
+               
+    }
+}

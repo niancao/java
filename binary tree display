@@ -1,204 +1,183 @@
 import java.util.*;
 
-class Treenode {
-	int data;
-	Treenode left, right;
+class Node {
+    int val;
+    Node left, right;
 
-	Treenode(int data) {
-		this.data = data;
-		left = right = null;
-	}
-}
-
-class Tree {
-	Treenode root;
-
-	Tree() {
-		root = null;
-	}
-}
-
-public class Main {
-
-	public static int height(Treenode root) {
-		if (root == null)
-			return 0;
-		return Math.max(height(root.left), height(root.right)) + 1;
-	}
-
-	public static int getcol(int h) {
-		if (h == 1)
-			return 1;
-		return getcol(h - 1) + getcol(h - 1) + 1;
-	}
-
-	public static void printTree(int[][] M, Treenode root, int col, int row, int height) {
-		if (root == null)
-			return;
-		M[row][col] = root.data;
-		printTree(M, root.left, col - (int)Math.pow(2, height - 2), row + 1, height - 1);
-		printTree(M, root.right, col + (int)Math.pow(2, height - 2), row + 1, height - 1);
-	}
-
-	public static void TreePrinter(Tree tree) {
-		int h = height(tree.root);
-		int col = getcol(h);
-		int[][] M = new int[h][col];
-		printTree(M, tree.root, col / 2, 0, h);
-		for (int i = 0; i < h; i++) {
-			for (int j = 0; j < col; j++) {
-				if (M[i][j] == 0)
-					System.out.print(" ");
-				else
-					System.out.print(M[i][j] + " ");
-			}
-			System.out.println();
-		}
-	}
-
-	public static void main(String[] args) {
-		Tree myTree = new Tree();
-		myTree.root = new Treenode(30);
-		myTree.root.left = new Treenode(21);
-		myTree.root.right = new Treenode(49);
-		myTree.root.left.left = new Treenode(19);
-		myTree.root.left.right = new Treenode(25);
-		myTree.root.right.left = new Treenode(38);
-		myTree.root.right.right = new Treenode(60);
-		myTree.root.left.left.left = new Treenode(16);
-		myTree.root.left.left.right = new Treenode(20);
-		myTree.root.left.right.left = new Treenode(22);
-		myTree.root.left.right.right = new Treenode(28);
-		myTree.root.left.right.right.left = new Treenode(27);
-		myTree.root.right.left.left = new Treenode(35);
-		myTree.root.right.left.right = new Treenode(42);
-		myTree.root.right.right.left = new Treenode(52);
-		myTree.root.right.right.right = new Treenode(69);
-		myTree.root.right.right.left.left = new Treenode(50);
-		myTree.root.right.right.left.left.right = new Treenode(51);
-		TreePrinter(myTree);
-	}
-}
-
-
-
-
-import java.util.*;
-
-class TreeNode {
-    int data;
-    TreeNode left, right;
-
-    TreeNode(int data) {
-        this.data = data;
-        left = right = null;
+    public Node(int val) {
+        this.val = val;
+        left = null;
+        right = null;
     }
 }
-
-class Tree {
-    TreeNode root;
+class Tree{
+    Node root;
 
     Tree() {
         root = null;
     }
 }
+class BinaryTree {
+    Node root;
 
-public class BST {
+    BinaryTree() { root = null; }
 
-    public static int height(TreeNode root) {
-        if (root == null)
-            return 0;
-        return Math.max(height(root.left), height(root.right)) + 1;
+    void printInorder(Node node) {
+        if (node == null)
+            return;
+        printInorder(node.left);
+        System.out.print(node.val + " ");
+        printInorder(node.right);
     }
 
-    public static int getCol(int h) {
-        if (h == 1)
-            return 1;
-        return getCol(h - 1) * 2 + 1;
+    void printInorder() {
+        printInorder(root);
     }
 
-    public static void printTree(TreeNode root, int level, int[] spaces) {
-        if (root == null)
+    void printPreorder(Node node) {
+        if (node == null)
+            return;
+        System.out.print(node.val + " ");
+        printPreorder(node.left);
+        printPreorder(node.right);
+    }
+
+    void printPreorder() {
+        printPreorder(root);
+    }
+
+    void printPostorder(Node node) {
+        if (node == null)
+            return;
+        printPostorder(node.left);
+        printPostorder(node.right);
+        System.out.print(node.val + " ");
+    }
+
+    void printPostorder() {
+        printPostorder(root);
+    }
+}
+
+
+class BinaryTreePrinter {
+    public static void print(Node root) {
+        int maxLevel = maxLevel(root);
+
+        printNodeInternal(Collections.singletonList(root), 1, maxLevel);
+    }
+
+    private static void printNodeInternal(List<Node> nodes, int level, int maxLevel) {
+        if (nodes.isEmpty() || isAllElementsNull(nodes))
             return;
 
-        int h = height(root);
-        int width = getCol(h);
+        int floor = maxLevel - level;
+        int edgeLines = (int) Math.pow(2, (Math.max(floor - 1, 0)));
+        int firstSpaces = (int) Math.pow(2, (floor)) - 1;
+        int betweenSpaces = (int) Math.pow(2, (floor + 1)) - 1;
 
-        int floor = width - (int) Math.pow(2, h - level - 1);
-        for (int i = 0; i < spaces[0]; i++)
-            System.out.print(" ");
+        printWhitespaces(firstSpaces);
 
-        Queue<TreeNode> nodes = new LinkedList<>();
-        nodes.add(root);
-        while (!nodes.isEmpty()) {
-            TreeNode node = nodes.poll();
-            if (node == null) {
-                System.out.print(" ");
-                nodes.add(null);
-                nodes.add(null);
+        List<Node> newNodes = new ArrayList<>();
+        for (Node node : nodes) {
+            if (node != null) {
+                System.out.print(node.val);
+                newNodes.add(node.left);
+                newNodes.add(node.right);
             } else {
-                System.out.print(node.data);
-                nodes.add(node.left);
-                nodes.add(node.right);
+                newNodes.add(null);
+                newNodes.add(null);
+                System.out.print(" ");
             }
-            for (int i = 0; i < spaces[1]; i++) {
-                if (i == spaces[1] / 2)
-                    System.out.print(" ");
+
+            printWhitespaces(betweenSpaces);
+        }
+        System.out.println("");
+
+        for (int i = 1; i <= edgeLines; i++) {
+            for (int j = 0; j < nodes.size(); j++) {
+                printWhitespaces(firstSpaces - i);
+                if (nodes.get(j) == null) {
+                    printWhitespaces(edgeLines + edgeLines + i + 1);
+                    continue;
+                }
+
+                if (nodes.get(j).left != null)
+                    System.out.print("/");
                 else
-                    System.out.print(" ");
+                    printWhitespaces(1);
+
+                printWhitespaces(i + i - 1);
+
+                if (nodes.get(j).right != null)
+                    System.out.print("\\");
+                else
+                    printWhitespaces(1);
+
+                printWhitespaces(edgeLines + edgeLines - i);
             }
+
+            System.out.println("");
         }
-        System.out.println();
 
-        if (level + 1 == h)
-            return;
-
-        for (int i = 0; i < spaces[2]; i++)
-            System.out.print(" ");
-
-        for (int i = 0; i < spaces[3]; i++) {
-            if (i == spaces[3] / 2)
-                System.out.print("|");
-            else
-                System.out.print(" ");
-        }
-        System.out.println();
-
-        int newSpaces[] = { spaces[0], (floor - spaces[0]) * 2 + 1, spaces[2], spaces[3] };
-        printTree(root.left, level + 1, newSpaces);
-
-        for (int i = 0; i < spaces[2]; i++)
-            System.out.print(" ");
-
-        for (int i = 0; i < spaces[3]; i++) {
-            if (i == spaces[3] / 2)
-                System.out.print("|");
-            else
-                System.out.print(" ");
-        }
-        System.out.println();
-
-        newSpaces[0] = floor;
-        newSpaces[2] = spaces[2] + spaces[3];
-        printTree(root.right, level + 1, newSpaces);
+        printNodeInternal(newNodes, level + 1, maxLevel);
     }
 
-    public static void TreePrinter(Tree tree) {
-        int h = height(tree.root);
-        int[] spaces = { 0, 0, 0, 0 };
-        printTree(tree.root, 0, spaces);
+    private static void printWhitespaces(int count) {
+        for (int i = 0; i < count; i++)
+            System.out.print(" ");
     }
 
+    private static int maxLevel(Node node) {
+        if (node == null)
+            return 0;
 
-        public static void main(String[] args) {
-        Tree myTree = new Tree();
-        myTree.root = new TreeNode(1);
-        myTree.root.left = new TreeNode(2);
-        myTree.root.right = new TreeNode(3);
-        myTree.root.left.left = new TreeNode(4);
-        myTree.root.left.right = new TreeNode(5);
-        myTree.root.right.left = new TreeNode(6);
-        myTree.root.right.right = new TreeNode(7);
-        TreePrinter(myTree);
+        return Math.max(maxLevel(node.left), maxLevel(node.right)) + 1;
+    }
+
+    private static boolean isAllElementsNull(List list) {
+        for (Object object : list) {
+            if (object != null)
+                return false;
+        }
+
+        return true;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+    Tree myTree = new Tree();
+    BinaryTree tree = new BinaryTree();
+    myTree.root = new Node(30);
+    myTree.root.left = new Node(21);
+    myTree.root.right = new Node(49);
+    myTree.root.left.left = new Node(19);
+    myTree.root.left.right = new Node(25);
+    myTree.root.right.left = new Node(38);
+    myTree.root.right.right = new Node(60);
+    myTree.root.left.left.left = new Node(16);
+    myTree.root.left.left.right = new Node(20);
+    myTree.root.left.right.left = new Node(22);
+    myTree.root.left.right.right = new Node(28);
+    myTree.root.left.right.right.left = new Node(27);
+    myTree.root.right.left.left = new Node(35);
+    myTree.root.right.left.right = new Node(42);
+    myTree.root.right.right.left = new Node(52);
+    myTree.root.right.right.right = new Node(69);
+    myTree.root.right.right.left.left = new Node(50);
+    myTree.root.right.right.left.left.right = new Node(51);
+    
+    tree.root = myTree.root;
+    
+    BinaryTreePrinter.print(myTree.root);
+    
+    BinaryTreePrinter.print(tree.root);
+    System.out.println("\nPreorder traversal of binary tree is ");
+    tree.printPreorder();
+    System.out.println("\nInorder traversal of binary tree is ");
+    tree.printInorder();
+    System.out.println("\nPostorder traversal of binary tree is ");
+    tree.printPostorder();
     }
 }

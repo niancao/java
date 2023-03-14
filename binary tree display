@@ -172,7 +172,6 @@ public class Main {
     
     BinaryTreePrinter.print(myTree.root);
     
-    BinaryTreePrinter.print(tree.root);
     System.out.println("\nPreorder traversal of binary tree is ");
     tree.printPreorder();
     System.out.println("\nInorder traversal of binary tree is ");

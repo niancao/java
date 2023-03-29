@@ -1,0 +1,61 @@
+import java.util.*;
+
+public class GraphTraversal {
+    public static void main(String[] args) {
+        int[][] matrix = { {0, 1, 1, 0, 0, 0},
+                           {1, 0, 0, 1, 1, 0},
+                           {1, 0, 0, 0, 1, 1},
+                           {0, 1, 0, 0, 0, 1},
+                           {0, 1, 1, 0, 0, 1},
+                           {0, 0, 1, 1, 1, 0} };
+        int start = 0;
+        int end = 5;
+        
+        System.out.println("BFS Traversal:");
+        bfs(matrix, start, end);
+        System.out.println();
+        
+        System.out.println("DFS Traversal:");
+        dfs(matrix, start, end, new boolean[matrix.length]);
+    }
+    
+    public static void bfs(int[][] matrix, int start, int end) {
+        Queue<Integer> queue = new LinkedList<>();
+        Set<Integer> visited = new HashSet<>();
+        queue.offer(start);
+        //System.out.print(queue);
+        visited.add(start);
+        
+        while (!queue.isEmpty()) {
+            int vertex = queue.poll();
+            System.out.print(vertex + " ");
+            if (vertex == end) {
+                return;
+            }
+            
+            for (int i = 0; i < matrix[vertex].length; i++) {
+                if (matrix[vertex][i] == 1 && !visited.contains(i)) {
+                    //System.out.print(matrix[vertex][i] + " ");
+                    queue.offer(i);
+                    //System.out.print(queue);
+                    visited.add(i);
+                }
+            }
+        }
+    }
+    
+    public static void dfs(int[][] matrix, int start, int end, boolean[] visited) {
+        visited[start] = true;
+        System.out.print(start + " ");
+        
+        if (start == end) {
+            return;
+        }
+        
+        for (int i = 0; i < matrix[start].length; i++) {
+            if (matrix[start][i] == 1 && !visited[i]) {
+                dfs(matrix, i, end, visited);
+            }
+        }
+    }
+}
